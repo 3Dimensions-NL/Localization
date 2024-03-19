@@ -16,7 +16,7 @@
         {
             "displayName": "Sample assets",
             "description": "Contains sample translations and a scene to showcase the functionality",
-            "path": "Samples~/LocalizationSample"
+            "path": "Samples~/LocalizationSampleScene"
         }
     ],
     "author": {
