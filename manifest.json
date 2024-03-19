@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "com.unity.textmeshpro": "3.0.8",
-    "com.3dimensions.unity-tools": "",
+    "com.3dimensions.unity-tools": "0.0.3",
     "com.3dimensions.localization": "file:../../Localization"
   }
 }
