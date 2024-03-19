@@ -1,0 +1,19 @@
+{
+    "name": "3Dimensions.Localization.Editor",
+    "rootNamespace": "_3Dimensions",
+    "references": [
+        "GUID:386b808858d069340b35f182462e4021",
+        "GUID:61cb45ae3c9e3be4ea45ed10102663ea"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

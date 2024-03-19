@@ -1,0 +1,18 @@
+{
+    "name": "com.3dimensions.localization",
+    "displayName": "3Dimensions Localization",
+    "version": "0.0.1",
+    "unity": "2022.3",
+    "description": "This package contains the localization tools we use in our unity software",
+    "keywords": ["Component, Editor, Tools, Localization"],
+    "category": "Editor Tools",
+    "dependencies": {
+        "com.unity.textmeshpro": "3.0.8",
+        "com.3dimensions.unity-tools": ""
+    },
+    "author": {
+        "name": "3Dimensions v.o.f.",
+        "email": "info@3dimensions.nl",
+        "url": "https://www.3dimensions.nl"
+    }
+}
