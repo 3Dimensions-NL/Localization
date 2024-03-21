@@ -1,3 +1,5 @@
+using System;
+using _3Dimensions.Localization.Runtime.Scripts.Translations;
 using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
@@ -6,7 +8,7 @@ namespace _3Dimensions.Localization.Runtime.Scripts
 {
     public class TranslationComponent : MonoBehaviour
     {
-        [SerializeField] private TranslationObject translationObject;
+        [SerializeField] private TranslationAsset translationAsset;
         private void Start()
         {
             ApplyTranslation();
@@ -15,105 +17,137 @@ namespace _3Dimensions.Localization.Runtime.Scripts
         [Button]
         public void ApplyTranslation()
         {
-            TMP_Text textMesh = GetComponent<TMP_Text>();
-            if (textMesh)
+            Type type = translationAsset.GetType();
+            
+            if (type == typeof(TranslationAssetString))
             {
-                textMesh.text = translationObject.TranslatedText;
+                TMP_Text textMesh = GetComponent<TMP_Text>();
+                if (textMesh)
+                {
+                    textMesh.text = translationAsset.GetValue<string>();
+                }
+            
+                Text legacyText = GetComponent<Text>();
+                if (legacyText)
+                {
+                    legacyText.text = translationAsset.GetValue<string>();
+                }
+
+                TMP_InputField textMeshInputField = GetComponent<TMP_InputField>();
+                if (textMeshInputField)
+                {
+                    textMeshInputField.text = translationAsset.GetValue<string>();
+                }
+
+                return;
+            }
+
+            if (type == typeof(TranslationAssetSprite))
+            {
+                Sprite sprite = translationAsset.GetValue<Sprite>();
+                if (sprite == null) return;
+                Image image = GetComponent<Image>();
+                if (image)
+                {
+                    image.sprite = sprite;
+                }
             }
             
-            Text legacyText = GetComponent<Text>();
-            if (legacyText)
-            {
-                legacyText.text = translationObject.TranslatedText;
-            }
-
-            TMP_InputField textMeshInputField = GetComponent<TMP_InputField>();
-            if (textMeshInputField)
-            {
-                textMeshInputField.text = translationObject.TranslatedText;
-            }
-
-            if (translationObject.TranslatedSprite == null) return;
-            Image image = GetComponent<Image>();
-            if (image)
-            {
-                image.sprite = translationObject.TranslatedSprite;
-            }
+            
         }
 
         [Button]
         public void SwitchTranslation()
         {
-            TMP_Text textMesh = GetComponent<TMP_Text>();
+            Type type = translationAsset.GetType();
 
-            if (textMesh)
+            if (type == typeof(TranslationAssetString))
             {
-                int currentIndex = 0;
-
-                for (int i = 0; i < translationObject.translations.Length; i++)
-                {
-                    if (textMesh.text == translationObject.translations[i].text)
-                    {
-                        //Check for end of array, get next translation index
-                        currentIndex = i;
-                        currentIndex = currentIndex >= translationObject.translations.Length - 1 ? 0 : currentIndex + 1;
-                    }
-                }
+                TranslationAssetString translationString = translationAsset as TranslationAssetString;
+                if (translationAsset == null) return;
                 
-                textMesh.text = translationObject.translations[currentIndex].text;
-            }
-            
-            Text legacyText = GetComponent<Text>();
-            if (legacyText)
-            {
-                int currentIndex = 0;
-
-                for (int i = 0; i < translationObject.translations.Length; i++)
+                TMP_Text textMesh = GetComponent<TMP_Text>();
+                if (textMesh)
                 {
-                    if (legacyText.text == translationObject.translations[i].text)
+                    
+                    
+                    int currentIndex = 0;
+
+                    for (int i = 0; i < translationString.translations.Length; i++)
                     {
-                        currentIndex = i;
-                        currentIndex = currentIndex >= translationObject.translations.Length - 1 ? 0 : currentIndex + 1;
+                        if (textMesh.text == translationString.translations[i].GetValue<string>())
+                        {
+                            //Check for end of array, get next translation index
+                            currentIndex = i;
+                            currentIndex = currentIndex >= translationString.translations.Length - 1 ? 0 : currentIndex + 1;
+                        }
                     }
+                
+                    textMesh.text = translationString.translations[currentIndex].GetValue<string>();                }
+            
+                Text legacyText = GetComponent<Text>();
+                if (legacyText)
+                {
+                    int currentIndex = 0;
+
+                    for (int i = 0; i < translationString.translations.Length; i++)
+                    {
+                        if (legacyText.text == translationString.translations[i].GetValue<string>())
+                        {
+                            currentIndex = i;
+                            currentIndex = currentIndex >= translationString.translations.Length - 1 ? 0 : currentIndex + 1;
+                        }
+                    }
+
+                    legacyText.text = translationString.translations[currentIndex].GetValue<string>();
                 }
 
-                legacyText.text = translationObject.translations[currentIndex].text;
-            }
-            
-            TMP_InputField textMeshInputField = GetComponent<TMP_InputField>();
-            if (textMeshInputField)
-            {
-                int currentIndex = 0;
-
-                for (int i = 0; i < translationObject.translations.Length; i++)
+                TMP_InputField textMeshInputField = GetComponent<TMP_InputField>();
+                if (textMeshInputField)
                 {
-                    if (textMeshInputField.text == translationObject.translations[i].text)
+                    int currentIndex = 0;
+
+                    for (int i = 0; i < translationString.translations.Length; i++)
                     {
-                        currentIndex = i;
-                        currentIndex = currentIndex >= translationObject.translations.Length - 1 ? 0 : currentIndex + 1;
+                        if (textMeshInputField.text == translationString.translations[i].GetValue<string>())
+                        {
+                            currentIndex = i;
+                            currentIndex = currentIndex >= translationString.translations.Length - 1 ? 0 : currentIndex + 1;
+                        }
                     }
+
+                    textMeshInputField.text = translationString.translations[currentIndex].GetValue<string>();
                 }
 
-                textMeshInputField.text = translationObject.translations[currentIndex].text;
+                return;
             }
-            
-            Image image = GetComponent<Image>();
-            if (image)
+
+            if (type == typeof(TranslationAssetSprite))
             {
-                int currentIndex = 0;
-
-                for (int i = 0; i < translationObject.translations.Length; i++)
+                TranslationAssetSprite translationSprite = translationAsset as TranslationAssetSprite;
+                if (translationSprite == null) return;
+                
+                Sprite sprite = translationAsset.GetValue<Sprite>();
+                if (sprite == null) return;
+                
+                Image image = GetComponent<Image>();
+                if (image)
                 {
-                    if (image.sprite == translationObject.translations[i].sprite)
+                    int currentIndex = 0;
+
+                    for (int i = 0; i < translationSprite.translations.Length; i++)
                     {
-                        currentIndex = i;
-                        currentIndex = currentIndex >= translationObject.translations.Length - 1 ? 0 : currentIndex + 1;
+                        if (image.sprite == translationSprite.translations[i].GetValue<Sprite>())
+                        {
+                            currentIndex = i;
+                            currentIndex = currentIndex >= translationSprite.translations.Length - 1 ? 0 : currentIndex + 1;
+                        }
                     }
-                }
 
-                if (translationObject.translations[currentIndex].sprite != null)
-                {
-                    image.sprite = translationObject.translations[currentIndex].sprite;
+                    if (translationSprite.translations[currentIndex].GetValue<Sprite>() != null)
+                    {
+                        image.sprite = translationSprite.translations[currentIndex].GetValue<Sprite>();
+                    }
                 }
             }
         }

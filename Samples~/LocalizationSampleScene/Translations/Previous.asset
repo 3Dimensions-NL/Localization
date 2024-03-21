@@ -9,13 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b87ed1cfdac5f0a4c9a058b9e28323ef, type: 3}
+  m_Script: {fileID: 11500000, guid: 705124c5648b448a9e55f1b0b3677573, type: 3}
   m_Name: Previous
   m_EditorClassIdentifier: 
   translations:
-  - language: {fileID: 11400000, guid: b3648eb5d99eac649918b84e628243b5, type: 2}
+  - language: {fileID: 11400000, guid: 99b77b26ce756ea49a2cd940dd9ed8f0, type: 2}
     text: Previous
-    sprite: {fileID: 0}
-  - language: {fileID: 11400000, guid: b8666613837603341b8bb395fd1645c7, type: 2}
+  - language: {fileID: 11400000, guid: b4729e80ce6373745ba1af6015211af0, type: 2}
     text: Vorige
-    sprite: {fileID: 0}

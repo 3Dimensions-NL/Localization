@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e3f37443aec9a0418bf2b0213f3ebea, type: 3}
   m_Name: English
   m_EditorClassIdentifier: 
-  flag: {fileID: 21300000, guid: 1824f349923f0ce47a40a964d056ed0e, type: 3}
+  flag: {fileID: 21300000, guid: 746e9f944366cb24099e7de7916d84cc, type: 3}
   cultures:
   - en-UK
   - en-US

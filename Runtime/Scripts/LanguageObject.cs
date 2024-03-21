@@ -28,9 +28,9 @@ namespace _3Dimensions.Localization.Runtime.Scripts
                     newText.Apply();
                     return newText;
                 }
-                else
-                    return sprite.texture;
-            }catch
+                return sprite.texture;
+            }
+            catch
             {
                 return sprite.texture;
             }

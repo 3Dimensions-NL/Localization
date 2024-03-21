@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using _3Dimensions.Localization.Runtime.Scripts;
+using _3Dimensions.Localization.Runtime.Scripts.Translations;
 using Sirenix.OdinInspector;
 using Sirenix.OdinInspector.Editor;
 using Sirenix.Utilities;
@@ -98,26 +99,31 @@ namespace _3Dimensions.Localization.Editor.Scripts
                 CreateTranslationScriptableObject(fileName);
                 
                 //Find translation for writing text
-                TranslationObject translationObject = _translationsList.Find(x => x.name == fileName);
-                if (translationObject == null)
+                TranslationAsset translationAsset = _translationsList.Find(x => x.name == fileName);
+                if (translationAsset == null)
                 {
                     Debug.LogError("Could not find TranslationObject: " + fileName);
                     break;
                 }
-                
-                //Create translations array
-                translationObject.translations =
-                    new TranslationObject.Translation[importedTranslations.Length];
 
-                Debug.Log("Writing translations to lastCreatedTranslation: " + translationObject.name);
-                for (int item = 1 ; item < itemCount; item++)
+                if (translationAsset.GetType() == typeof(TranslationAssetString))
                 {
-                    Debug.Log("Translation = " + item + ", " + dataRows[row][item]);
-                    translationObject.translations[item - 1].language = importedTranslations[item - 1];
-                    translationObject.translations[item - 1].text = dataRows[row][item];
-                }
+                    TranslationAssetString translationAssetString = translationAsset as TranslationAssetString;
+
+                    //Create translations array
+                    translationAssetString.translations =
+                        new TranslationAssetString.TranslationString[importedTranslations.Length];
+
+                    Debug.Log("Writing translations to lastCreatedTranslation: " + translationAsset.name);
+                    for (int item = 1 ; item < itemCount; item++)
+                    {
+                        Debug.Log("Translation = " + item + ", " + dataRows[row][item]);
+                        translationAssetString.translations[item - 1].language = importedTranslations[item - 1];
+                        if (translationAssetString.translations[item - 1] is TranslationAssetString.TranslationString ts) ts.text = dataRows[row][item];
+                    }
                     
-                EditorUtility.SetDirty(translationObject);
+                    EditorUtility.SetDirty(translationAsset);
+                }
             }
         }
         
@@ -146,24 +152,34 @@ namespace _3Dimensions.Localization.Editor.Scripts
             //Add first row to csv data rows
             csvRows.Add(firstRow);
 
-            foreach (TranslationObject translationObject in _translationsList)
+            foreach (TranslationAsset translationObject in _translationsList)
             {
-                string translationRow = translationObject.name;
-
-                //Add translation by language column
-                foreach (string language in languageList)
+                
+                if (translationObject.GetType() == typeof(TranslationAssetString))
                 {
-                    foreach (TranslationObject.Translation translation in translationObject.translations)
+                    TranslationAssetString translationAssetString = translationObject as TranslationAssetString;
+
+                    string translationRow = translationObject.name;
+
+                    //Add translation by language column
+                    foreach (string language in languageList)
                     {
-                        if (translation.language.name == language)
+                        foreach (TranslationAssetString.TranslationString translation in translationAssetString.translations)
                         {
-                            translationRow = translationRow + ",\"" + translation.text + "\"";
+                            if (translation.language.name == language)
+                            {
+                                string value = translation.GetValue<string>();
+                                if (string.IsNullOrEmpty(value))
+                                {
+                                    translationRow = translationRow + ",\"" + value + "\"";
+                                }
+                            }
                         }
                     }
-                }
                 
-                // Debug.Log("Translation row = " + translationRow);
-                csvRows.Add(translationRow);
+                    // Debug.Log("Translation row = " + translationRow);
+                    csvRows.Add(translationRow);
+                };
             }
             
             CsvFileReaderAndWriter.WriteCsv(csvRows.ToArray());
@@ -177,15 +193,15 @@ namespace _3Dimensions.Localization.Editor.Scripts
 
         [BoxGroup("Translations")]
         [ShowInInspector]
-        private static TranslationObject LastCreatedTranslation;
+        private static TranslationAsset LastCreatedTranslation;
         
         [BoxGroup("Translations")] [ShowInInspector, ListDrawerSettings(HideAddButton = true, DraggableItems = false, ShowFoldout = false, ShowIndexLabels = false, ShowPaging = false, ShowItemCount = true, HideRemoveButton = true)]
-        private static List<TranslationObject> _translationsList = new List<TranslationObject>();
+        private static List<TranslationAsset> _translationsList = new List<TranslationAsset>();
 
         public static void LoadTranslations()
         {
             //Lookup translations in path
-            List<TranslationObject> tempList = new(FindAllScriptableObjectsOfType<TranslationObject>("t:TranslationObject", PathToStoreTranslations));
+            List<TranslationAsset> tempList = new(FindAllScriptableObjectsOfType<TranslationAsset>("t:TranslationObject", PathToStoreTranslations));
 
             if (tempList.Count == 0)
             {
@@ -193,7 +209,7 @@ namespace _3Dimensions.Localization.Editor.Scripts
             }
             else
             {
-                _translationsList = new List<TranslationObject>(tempList);
+                _translationsList = new List<TranslationAsset>(tempList);
             }
             
             try
@@ -242,8 +258,8 @@ namespace _3Dimensions.Localization.Editor.Scripts
             }
             
             string relativePath = PathToStoreTranslations.Substring(PathToStoreTranslations.IndexOf("Assets/"));
-            TranslationObject newTranslation = CreateInstance<TranslationObject>();
-            newTranslation.translations = new TranslationObject.Translation[Settings.defaultLanguageSet.Count];
+            TranslationAssetString newTranslation = CreateInstance<TranslationAssetString>();
+            newTranslation.translations = new TranslationAssetString.TranslationString[Settings.defaultLanguageSet.Count];
             for (int i = 0; i < Settings.defaultLanguageSet.Count; i++)
             {
                 newTranslation.translations[i].language = Settings.defaultLanguageSet[i];
