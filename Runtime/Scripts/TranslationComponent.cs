@@ -51,9 +51,20 @@ namespace _3Dimensions.Localization.Runtime.Scripts
                 {
                     image.sprite = sprite;
                 }
+
+                return;
             }
-            
-            
+
+            if (type == typeof(TranslationAssetAudioClip))
+            {
+                AudioClip clip = translationAsset.GetValue<AudioClip>();
+                if (clip == null) return;
+                AudioSource source = GetComponent<AudioSource>();
+                if (source)
+                {
+                    source.clip = clip;
+                }
+            }
         }
 
         [Button]
@@ -147,6 +158,35 @@ namespace _3Dimensions.Localization.Runtime.Scripts
                     if (translationSprite.translations[currentIndex].GetValue<Sprite>() != null)
                     {
                         image.sprite = translationSprite.translations[currentIndex].GetValue<Sprite>();
+                    }
+                }
+            }
+            
+            if (type == typeof(TranslationAssetAudioClip))
+            {
+                TranslationAssetAudioClip translationAudioClip = translationAsset as TranslationAssetAudioClip;
+                if (translationAudioClip == null) return;
+                
+                AudioClip clip = translationAsset.GetValue<AudioClip>();
+                if (clip == null) return;
+                
+                AudioSource source = GetComponent<AudioSource>();
+                if (source)
+                {
+                    int currentIndex = 0;
+
+                    for (int i = 0; i < translationAudioClip.translations.Length; i++)
+                    {
+                        if (source.clip == translationAudioClip.translations[i].GetValue<AudioClip>())
+                        {
+                            currentIndex = i;
+                            currentIndex = currentIndex >= translationAudioClip.translations.Length - 1 ? 0 : currentIndex + 1;
+                        }
+                    }
+
+                    if (translationAudioClip.translations[currentIndex].GetValue<AudioClip>() != null)
+                    {
+                        source.clip = translationAudioClip.translations[currentIndex].GetValue<AudioClip>();
                     }
                 }
             }
