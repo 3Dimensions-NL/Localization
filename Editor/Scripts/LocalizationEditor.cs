@@ -22,7 +22,7 @@ namespace _3Dimensions.Localization.Editor.Scripts
         
         private static readonly string _settingsPath = "LocalizationSettings";
         
-        [MenuItem("3Dimensions/Localization Editor")]
+        [MenuItem("3Dimensions/Localization/Localization Editor")]
         private static void OpenWindow()
         {
             var window = GetWindow<LocalizationEditor>();

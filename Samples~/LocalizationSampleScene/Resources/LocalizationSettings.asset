@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: LocalizationSettings
   m_EditorClassIdentifier: 
   pathToStoreTranslations: C:/UnityProjects/UnityTools/Assets/Localizations
-  defaultLanguage: {fileID: 11400000, guid: 99b77b26ce756ea49a2cd940dd9ed8f0, type: 2}
+  defaultLanguage: {fileID: 11400000, guid: b3648eb5d99eac649918b84e628243b5, type: 2}
   defaultLanguageSet:
-  - {fileID: 11400000, guid: 99b77b26ce756ea49a2cd940dd9ed8f0, type: 2}
-  - {fileID: 11400000, guid: b4729e80ce6373745ba1af6015211af0, type: 2}
+  - {fileID: 11400000, guid: b3648eb5d99eac649918b84e628243b5, type: 2}
+  - {fileID: 11400000, guid: b8666613837603341b8bb395fd1645c7, type: 2}
   prefix: 

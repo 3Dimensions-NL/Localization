@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Flag_Translation
   m_EditorClassIdentifier: 
   translations:
-  - language: {fileID: 11400000, guid: 99b77b26ce756ea49a2cd940dd9ed8f0, type: 2}
-    sprite: {fileID: 21300000, guid: 746e9f944366cb24099e7de7916d84cc, type: 3}
-  - language: {fileID: 11400000, guid: b4729e80ce6373745ba1af6015211af0, type: 2}
-    sprite: {fileID: 21300000, guid: c484e484a3c5f6442adb2bc4e075bdcd, type: 3}
+  - language: {fileID: 11400000, guid: b3648eb5d99eac649918b84e628243b5, type: 2}
+    sprite: {fileID: 21300000, guid: 1824f349923f0ce47a40a964d056ed0e, type: 3}
+  - language: {fileID: 11400000, guid: b8666613837603341b8bb395fd1645c7, type: 2}
+    sprite: {fileID: 21300000, guid: 8f7e19d1fee26954bb517e25ca5c1a59, type: 3}
