@@ -13,6 +13,13 @@ namespace _3Dimensions.Localization.Editor.Scripts
 {
     public class LocalizationEditor : OdinEditorWindow
     {
+        public enum TranslationType
+        {
+            String,
+            Sprite,
+            AudioClip
+        }
+        
         private static readonly string _settingsPath = "LocalizationSettings";
         
         [MenuItem("3Dimensions/Localization Editor")]
@@ -96,7 +103,7 @@ namespace _3Dimensions.Localization.Editor.Scripts
             {
                 string fileName = dataRows[row][0];
                 // Debug.Log("Filename to create = " + fileName);
-                CreateTranslationScriptableObject(fileName);
+                CreateTranslationScriptableObject(fileName, TranslationType.String);
                 
                 //Find translation for writing text
                 TranslationAsset translationAsset = _translationsList.Find(x => x.name == fileName);
@@ -185,7 +192,7 @@ namespace _3Dimensions.Localization.Editor.Scripts
             CsvFileReaderAndWriter.WriteCsv(csvRows.ToArray());
         }
         
-        [BoxGroup("New Translation")] [ShowInInspector, InlineButton("CreateNewTranslation")]
+        [BoxGroup("New Translation")] [ShowInInspector]
         public static string NewTranslationName;
 
         private static string PathToStoreTranslations => Settings.pathToStoreTranslations;
@@ -201,8 +208,8 @@ namespace _3Dimensions.Localization.Editor.Scripts
         public static void LoadTranslations()
         {
             //Lookup translations in path
-            List<TranslationAsset> tempList = new(FindAllScriptableObjectsOfType<TranslationAsset>("t:TranslationObject", PathToStoreTranslations));
-
+            List<TranslationAsset> tempList = new(FindAllScriptableObjectsOfType<TranslationAsset>("t:TranslationAsset", PathToStoreTranslations));
+            
             if (tempList.Count == 0)
             {
                 _translationsList.Clear();
@@ -222,17 +229,30 @@ namespace _3Dimensions.Localization.Editor.Scripts
             }
         }
 
-        private static void CreateNewTranslation()
+        [BoxGroup("New Translation"), HorizontalGroup("New Translation/Create Buttons"), Button]
+        private static void NewStringTranslation()
         {
-            if (string.IsNullOrEmpty(NewTranslationName)) return;
-            string fullPath = PathToStoreTranslations + "/" + NewTranslationName + ".asset";
-
-            CreateNewTranslationByName(FullTranslationName);
-            
+            // if (string.IsNullOrEmpty(NewTranslationName)) return;
+            // string fullPath = PathToStoreTranslations + "/" + NewTranslationName + ".asset";
+            CreateNewTranslationByName(FullTranslationName, TranslationType.String);
+            LastCreatedTranslation = _translationsList.Find(x => x.name == FullTranslationName);
+        }
+        
+        [BoxGroup("New Translation"), HorizontalGroup("New Translation/Create Buttons"), Button]
+        private static void NewSpriteTranslation()
+        {
+            CreateNewTranslationByName(FullTranslationName, TranslationType.Sprite);
             LastCreatedTranslation = _translationsList.Find(x => x.name == FullTranslationName);
         }
 
-        private static void CreateNewTranslationByName(string fileName)
+        [BoxGroup("New Translation"), HorizontalGroup("New Translation/Create Buttons"), Button]
+        private static void NewAudioTranslation()
+        {
+            CreateNewTranslationByName(FullTranslationName, TranslationType.AudioClip);
+            LastCreatedTranslation = _translationsList.Find(x => x.name == FullTranslationName);
+        }
+        
+        private static void CreateNewTranslationByName(string fileName, TranslationType type)
         {
             if (string.IsNullOrEmpty(fileName)) return;
 
@@ -244,10 +264,10 @@ namespace _3Dimensions.Localization.Editor.Scripts
                 return;
             }
 
-            CreateTranslationScriptableObject(fileName);
+            CreateTranslationScriptableObject(fileName, type);
         }
 
-        private static void CreateTranslationScriptableObject(string fileName)
+        private static void CreateTranslationScriptableObject(string fileName, TranslationType type)
         {
             string fullPath = PathToStoreTranslations + "/" + fileName + ".asset";
 
@@ -258,13 +278,47 @@ namespace _3Dimensions.Localization.Editor.Scripts
             }
             
             string relativePath = PathToStoreTranslations.Substring(PathToStoreTranslations.IndexOf("Assets/"));
-            TranslationAssetString newTranslation = CreateInstance<TranslationAssetString>();
-            newTranslation.translations = new TranslationAssetString.TranslationString[Settings.defaultLanguageSet.Count];
-            for (int i = 0; i < Settings.defaultLanguageSet.Count; i++)
+
+            switch (type)
             {
-                newTranslation.translations[i].language = Settings.defaultLanguageSet[i];
+                case TranslationType.String:
+                    TranslationAssetString newStringTranslation = CreateInstance<TranslationAssetString>();
+                    newStringTranslation.translations = new TranslationAssetString.TranslationString[Settings.defaultLanguageSet.Count];
+                    for (int i = 0; i < Settings.defaultLanguageSet.Count; i++)
+                    {
+                        newStringTranslation.translations[i] = new TranslationAssetString.TranslationString
+                        {
+                            language = Settings.defaultLanguageSet[i]
+                        };
+                    }
+                    AssetDatabase.CreateAsset(newStringTranslation, relativePath + "/" + fileName + ".asset");
+                    break;
+                case TranslationType.Sprite:
+                    TranslationAssetSprite newSpriteTranslation = CreateInstance<TranslationAssetSprite>();
+                    newSpriteTranslation.translations = new TranslationAssetSprite.TranslationSprite[Settings.defaultLanguageSet.Count];
+                    for (int i = 0; i < Settings.defaultLanguageSet.Count; i++)
+                    {
+                        newSpriteTranslation.translations[i] = new TranslationAssetSprite.TranslationSprite
+                        {
+                            language = Settings.defaultLanguageSet[i]
+                        };
+                    }
+                    AssetDatabase.CreateAsset(newSpriteTranslation, relativePath + "/" + fileName + ".asset");
+                    break;
+                case TranslationType.AudioClip:
+                    TranslationAssetAudioClip newAudioClipTranslation = CreateInstance<TranslationAssetAudioClip>();
+                    newAudioClipTranslation.translations = new TranslationAssetAudioClip.TranslationAudioClip[Settings.defaultLanguageSet.Count];
+                    for (int i = 0; i < Settings.defaultLanguageSet.Count; i++)
+                    {
+                        newAudioClipTranslation.translations[i] = new TranslationAssetAudioClip.TranslationAudioClip
+                        {
+                            language = Settings.defaultLanguageSet[i]
+                        };
+                    }
+                    AssetDatabase.CreateAsset(newAudioClipTranslation, relativePath + "/" + fileName + ".asset");
+                    break;
             }
-            AssetDatabase.CreateAsset(newTranslation, relativePath + "/" + fileName + ".asset");
+            
             AssetDatabase.Refresh();
             AssetDatabase.ImportAsset(relativePath + "/" + fileName);
             LoadTranslations();
