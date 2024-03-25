@@ -10,7 +10,7 @@
     "category": "Editor Tools",
     "dependencies": {
         "com.unity.textmeshpro": "3.0.8",
-        "com.3dimensions.unity-tools": "0.0.3"
+        "3Dimensions Unity Tools": "https://github.com/3Dimensions-NL/UnityTools"
     },
     "changelogUrl": "https://github.com/3Dimensions-NL/Localization/releases/",
     "samples": [
