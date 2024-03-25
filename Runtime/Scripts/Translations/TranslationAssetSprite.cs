@@ -30,5 +30,31 @@ namespace _3Dimensions.Localization.Runtime.Scripts.Translations
             Debug.LogWarning("No translation found", this);
             return (T) Convert.ChangeType(null, typeof(T));
         }
+        
+        #if UNITY_EDITOR
+        private void Reset()
+        {
+            LoadLanguages();
+        }
+
+        private void LoadLanguages()
+        {
+            if (translations != null)
+            {
+                if (translations.Length != 0) return;
+            }
+
+            LanguageObject[] languages = Resources.Load<LocalizationSettings>("LocalizationSettings").defaultLanguageSet.ToArray();
+            translations = new TranslationSprite[languages.Length];
+                
+            for (int i = 0; i < languages.Length; i++)
+            {
+                translations[i] = new TranslationSprite();
+                translations[i].language = languages[i];
+            }
+            
+            UnityEditor.EditorUtility.SetDirty(this);
+        }
+        #endif
     }
 }
