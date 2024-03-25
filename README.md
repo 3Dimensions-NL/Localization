@@ -3,6 +3,7 @@ A collection of components to help localize your Unity project.
 
 ## Dependencies
 > [!IMPORTANT]
+> ### Odin Inspector
 > We use the Odin Inspector for dynamic inspectors.\
 > If you try to use this package without Odin Inspector, you will lose functionality and get errors!\
 > You can get the asset here: <https://assetstore.unity.com/packages/tools/utilities/odin-inspector-and-serializer-89041>
