@@ -5,7 +5,7 @@ A collection of components to help localize your Unity project.
 > [!IMPORTANT]
 > We use the Odin Inspector for dynamic inspectors.
 > If you try to use this package without Odin Inspector, you will lose functionality and get errors!
-> <https://assetstore.unity.com/packages/tools/utilities/odin-inspector-and-serializer-89041>
+> You can get the asset here: <https://assetstore.unity.com/packages/tools/utilities/odin-inspector-and-serializer-89041>
 
 ### 3Dimensions Unity Tools
 This package uses the com.3dimensions.unity-tools package.
