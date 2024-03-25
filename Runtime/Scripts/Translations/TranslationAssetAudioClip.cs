@@ -3,7 +3,7 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 namespace _3Dimensions.Localization.Runtime.Scripts.Translations
 {
-    [CreateAssetMenu(fileName = "New Audio Clip Translation", menuName = "3Dimensions/Localization/New Audio Clip Translation")]
+    [CreateAssetMenu(fileName = "New Audio Clip Translation", menuName = "3Dimensions/Localization/New Translation Audio Clip")]
     [Serializable, InlineEditor]
     public class TranslationAssetAudioClip : TranslationAsset
     {

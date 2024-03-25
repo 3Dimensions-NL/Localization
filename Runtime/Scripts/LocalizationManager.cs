@@ -57,8 +57,6 @@ namespace _3Dimensions.Localization.Runtime.Scripts
             //A preset is found, try and load the preset
             if (!string.IsNullOrEmpty(playerPrefsLanguage))
             {
-                Debug.Log("Loading Language: " + playerPrefsLanguage);
-                
                 foreach (LanguageObject languageObject in settings.defaultLanguageSet)
                 {
                     if (playerPrefsLanguage == languageObject.name)
@@ -71,8 +69,6 @@ namespace _3Dimensions.Localization.Runtime.Scripts
             
             //When no preset is set by player, try and load the language associated with the local culture
             string currentCulture = CultureInfo.CurrentCulture.Name;
-            Debug.Log("No player preferred Language, try local to find culture: " + currentCulture);
-
                 
             foreach (LanguageObject languageObject in settings.defaultLanguageSet)
             {
@@ -113,14 +109,11 @@ namespace _3Dimensions.Localization.Runtime.Scripts
         {
             CurrentLanguage = newCurrentLanguage;
             PlayerPrefs.SetString("Language", CurrentLanguage.name);
-            Debug.Log("Set language to: " + CurrentLanguage.name);
-
             ApplyCurrentLanguage();
         }
         
         private static void ApplyCurrentLanguage()
         {
-            Debug.Log("Applied Language: " + CurrentLanguage.name);
             TranslationComponent[] translationsInScene = FindObjectsOfType<TranslationComponent>(true);
             foreach (TranslationComponent translationComponent in translationsInScene)
             {

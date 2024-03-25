@@ -4,25 +4,23 @@
     "version": "0.1.1",
     "unity": "2022.3",
     "description": "This package contains the localization tools we use in our unity software",
-    "keywords": [
-        "Component, Editor, Tools, Localization"
-    ],
+    "keywords": ["Component, Editor, Tools, Localization"],
     "category": "Editor Tools",
+    "changelogUrl": "https://github.com/3Dimensions-NL/Localization/releases/",
+    "author": {
+        "name": "3Dimensions v.o.f.",
+        "email": "info@3dimensions.nl",
+        "url": "https://www.3dimensions.nl"
+    },
     "dependencies": {
         "com.unity.textmeshpro": "3.0.8",
-        "com.3dimensions.unity-tools": "0.1.1"
+        "com.3dimensions.unity-tools": "0.1.2"
     },
-    "changelogUrl": "https://github.com/3Dimensions-NL/Localization/releases/",
     "samples": [
         {
             "displayName": "Sample assets",
             "description": "Contains sample translations and a scene to showcase the functionality",
             "path": "Samples~/LocalizationSampleScene"
         }
-    ],
-    "author": {
-        "name": "3Dimensions v.o.f.",
-        "email": "info@3dimensions.nl",
-        "url": "https://www.3dimensions.nl"
-    }
+    ]    
 }

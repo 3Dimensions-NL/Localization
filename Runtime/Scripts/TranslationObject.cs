@@ -3,7 +3,7 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 namespace _3Dimensions.Localization.Runtime.Scripts
 {
-    [CreateAssetMenu(fileName = "New Translation", menuName = "3Dimensions/Localization/New Translation")] [Serializable, InlineEditor]
+    [Serializable, InlineEditor]
     public class TranslationObject : ScriptableObject
     {
         public string Title => this.name;
