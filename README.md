@@ -10,4 +10,5 @@ If you try to use this package without Odin Inspector, you will lose functionali
 ```
 
 This package uses the com.3dimensions.unity-tools package.
-Install in Unity package manager with git url: https://github.com/3Dimensions-NL/UnityTools.git
+Install in Unity package manager with git url: 
+`https://github.com/3Dimensions-NL/UnityTools.git`
