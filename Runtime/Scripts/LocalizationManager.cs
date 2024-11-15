@@ -1,3 +1,4 @@
+using System;
 using System.Globalization;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -41,6 +42,8 @@ namespace _3Dimensions.Localization.Runtime.Scripts
 
         public LanguageObject DefaultLanguage => settings.defaultLanguage;
         public LanguageObject[] AvailableLanguage => settings.defaultLanguageSet.ToArray();
+
+        public static event Action<LanguageObject> NewLanguageSetEvent;
         
         private void Awake()
         {
@@ -109,6 +112,7 @@ namespace _3Dimensions.Localization.Runtime.Scripts
         {
             CurrentLanguage = newCurrentLanguage;
             PlayerPrefs.SetString("Language", CurrentLanguage.name);
+            NewLanguageSetEvent?.Invoke(newCurrentLanguage);
             ApplyCurrentLanguage();
         }
         
