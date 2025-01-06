@@ -1,15 +1,14 @@
 ﻿using System;
-using Sirenix.OdinInspector;
 using UnityEngine;
 namespace _3Dimensions.Localization.Runtime.Scripts.Translations
 {
     [CreateAssetMenu(fileName = "New String Translation", menuName = "3Dimensions/Localization/New Translation String")]
-    [Serializable, InlineEditor]
+    [Serializable]
     public class TranslationAssetString : TranslationAsset
     {
         public TranslationString[] translations;
         
-        [Serializable, InlineEditor]
+        [Serializable]
         public class TranslationString : Translation
         {
             [TextArea] public string text;
@@ -44,13 +43,15 @@ namespace _3Dimensions.Localization.Runtime.Scripts.Translations
                 if (translations.Length != 0) return;
             }
 
-            LanguageObject[] languages = Resources.Load<LocalizationSettings>("LocalizationSettings").defaultLanguageSet.ToArray();
+            LanguageObject[] languages = Resources.Load<LocalizationSettings>("LocalizationSettings").languageSet.ToArray();
             translations = new TranslationString[languages.Length];
                 
             for (int i = 0; i < languages.Length; i++)
             {
-                translations[i] = new TranslationString();
-                translations[i].language = languages[i];
+                translations[i] = new TranslationString
+                {
+                    language = languages[i]
+                };
             }
             
             UnityEditor.EditorUtility.SetDirty(this);

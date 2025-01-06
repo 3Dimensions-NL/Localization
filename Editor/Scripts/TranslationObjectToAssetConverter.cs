@@ -3,32 +3,50 @@ using System.IO;
 using System.Linq;
 using _3Dimensions.Localization.Runtime.Scripts;
 using _3Dimensions.Localization.Runtime.Scripts.Translations;
-using Sirenix.OdinInspector;
-using Sirenix.OdinInspector.Editor;
-using Sirenix.Utilities;
-using Sirenix.Utilities.Editor;
 using UnityEditor;
 using UnityEngine;
+
 namespace _3Dimensions.Localization.Editor.Scripts
 {
-    public class TranslationObjectToAssetConverter : OdinEditorWindow
+    public class TranslationObjectToAssetConverter : EditorWindow
     {
+        public static TranslationAsset newAsset;
+
         [MenuItem("3Dimensions/Localization/Translation Converter")]
         private static void OpenWindow()
         {
             var window = GetWindow<TranslationObjectToAssetConverter>();
-            window.position = GUIHelper.GetEditorWindowRect().AlignCenter(700, 700);
+            window.titleContent = new GUIContent("Translation Converter");
+            window.position = new Rect((Screen.currentResolution.width - 700) / 2,
+                (Screen.currentResolution.height - 700) / 2,
+                700, 700);
         }
-        
-        [InfoBox("Converts TranslationObjects into the net TranslationAssets,\n Unfortunately the asset references are not replaced in the scenes etc. this is a manual process until we can figure this out")]
-        [Button]
+
+        private void OnGUI()
+        {
+            // Info box replacement
+            EditorGUILayout.HelpBox("Converts TranslationObjects into TranslationAssets.\n" +
+                "Unfortunately, the asset references are not replaced in scenes, etc. This is a manual process until resolved.", MessageType.Info);
+
+            // Search button replacement
+            if (GUILayout.Button("Search for Translation Objects"))
+            {
+                SearchForTranslationObjects();
+            }
+
+            // Convert button replacement
+            if (GUILayout.Button("Convert Translation Objects"))
+            {
+                ConvertTranslationObjects();
+            }
+        }
+
         private static void SearchForTranslationObjects()
         {
             List<TranslationObject> tempList = new(FindAllScriptableObjectsOfType<TranslationObject>("t:TranslationObject"));
             Debug.Log("Found " + tempList.Count + " TranslationObjects that can be converted");
         }
-        
-        [Button]
+
         private static void ConvertTranslationObjects()
         {
             List<TranslationObject> tempList = new(FindAllScriptableObjectsOfType<TranslationObject>("t:TranslationObject"));
@@ -40,22 +58,19 @@ namespace _3Dimensions.Localization.Editor.Scripts
 
                 string fileName = Path.GetFileNameWithoutExtension(path);
                 string fileExtension = Path.GetExtension(path);
-                
                 string newFileName = "string_" + fileName;
-
                 string newPath = Path.Combine(Path.GetDirectoryName(path), newFileName + fileExtension);
-                
+
                 Debug.Log("New path is " + newPath);
 
-                
-                //Check type
+                // Check type
                 if (!string.IsNullOrEmpty(to.TranslatedText))
                 {
                     Debug.Log("Asset was a string translation");
 
                     TranslationAssetString stringAsset = CreateInstance<TranslationAssetString>();
                     stringAsset.translations = new TranslationAssetString.TranslationString[to.translations.Length];
-                    
+
                     for (int i = 0; i < to.translations.Length; i++)
                     {
                         stringAsset.translations[i] = new TranslationAssetString.TranslationString
@@ -74,7 +89,7 @@ namespace _3Dimensions.Localization.Editor.Scripts
 
                     TranslationAssetSprite spriteAsset = CreateInstance<TranslationAssetSprite>();
                     spriteAsset.translations = new TranslationAssetSprite.TranslationSprite[to.translations.Length];
-                    
+
                     for (int i = 0; i < to.translations.Length; i++)
                     {
                         spriteAsset.translations[i] = new TranslationAssetSprite.TranslationSprite
@@ -83,21 +98,21 @@ namespace _3Dimensions.Localization.Editor.Scripts
                             sprite = to.translations[i].sprite
                         };
                     }
-                    
+
                     newAsset = spriteAsset;
                     AssetDatabase.CreateAsset(spriteAsset, newPath);
                 }
             }
         }
-        
-        public static List<T> FindAllScriptableObjectsOfType<T>(string filter)
-            where T : ScriptableObject
+
+        public static List<T> FindAllScriptableObjectsOfType<T>(string filter) where T : ScriptableObject
         {
-            return AssetDatabase.FindAssets(filter, new[] { "Assets/" })
+            return AssetDatabase.FindAssets(filter, new[]
+                {
+                    "Assets/"
+                })
                 .Select(guid => AssetDatabase.LoadAssetAtPath<T>(AssetDatabase.GUIDToAssetPath(guid)))
                 .ToList();
         }
-
-        [ShowInInspector] public static TranslationAsset newAsset;
     }
 }

@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3efad7833ed86141b303c5bf27fdce1, type: 3}
   m_Name: LocalizationSettings
   m_EditorClassIdentifier: 
-  pathToStoreTranslations: C:/UnityProjects/UnityTools/Assets/Localizations
+  pathToStoreLanguages: C:/UnityProjects/UnityTools/Assets/Localization/Samples/LocalizationSampleScene/Localizations
+  pathToStoreTranslations: C:/UnityProjects/UnityTools/Assets/Localization/Samples/LocalizationSampleScene/Translations
   defaultLanguage: {fileID: 11400000, guid: b8666613837603341b8bb395fd1645c7, type: 2}
-  defaultLanguageSet:
+  languageSet:
   - {fileID: 11400000, guid: b3648eb5d99eac649918b84e628243b5, type: 2}
   - {fileID: 11400000, guid: b8666613837603341b8bb395fd1645c7, type: 2}
-  prefix: 

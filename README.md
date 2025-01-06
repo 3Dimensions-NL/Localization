@@ -1,16 +1,9 @@
 # 3Dimensions Localization
-A collection of components to help localize your Unity project.
+A collection of components and scripts to help localize your Unity project.
 
-## Dependencies
-> [!IMPORTANT]
-> ### Odin Inspector
-> We use the Odin Inspector for dynamic inspectors.\
-> If you try to use this package without Odin Inspector, you will lose functionality and get errors!\
-> You can get the asset here: <https://assetstore.unity.com/packages/tools/utilities/odin-inspector-and-serializer-89041>
+## Usage
+1. Install the package with the Unity Package Manager. (Use the 'Install package from GIT URL' function and paste the repo URL)
+2. Import the Samples (these contain a manager script and example translation assets)
+3. In your start scene, add the LocalizationManager prefab. This wil manager alle TranslationComponents.
+4. Add a TranslationComponent to an translatable object (e.g. TextMesh Pro Text object, sprite or audio source)
 
-### 3Dimensions Unity Tools
-This package uses the com.3dimensions.unity-tools package.\
-Install in Unity package manager with git url: 
-```
-https://github.com/3Dimensions-NL/UnityTools.git
-```

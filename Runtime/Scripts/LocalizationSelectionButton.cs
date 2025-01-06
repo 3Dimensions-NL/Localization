@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.UI;
-using Sirenix.OdinInspector;
 
 namespace _3Dimensions.Localization.Runtime.Scripts
 {
@@ -20,7 +19,6 @@ namespace _3Dimensions.Localization.Runtime.Scripts
             LocalizationManager.SetCurrentLanguage(language);
         }
 
-        [Button]
         public void Setup(LanguageObject newLanguage)
         {
             language = newLanguage;

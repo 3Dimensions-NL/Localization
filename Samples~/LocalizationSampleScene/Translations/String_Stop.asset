@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 705124c5648b448a9e55f1b0b3677573, type: 3}
-  m_Name: Previous
+  m_Name: String_Stop
   m_EditorClassIdentifier: 
   translations:
   - language: {fileID: 11400000, guid: b3648eb5d99eac649918b84e628243b5, type: 2}
-    text: Previous
+    text: Stop
   - language: {fileID: 11400000, guid: b8666613837603341b8bb395fd1645c7, type: 2}
-    text: Vorige
+    text: Stop

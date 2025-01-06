@@ -1,6 +1,5 @@
 using System;
 using _3Dimensions.Localization.Runtime.Scripts.Translations;
-using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -14,7 +13,7 @@ namespace _3Dimensions.Localization.Runtime.Scripts
             ApplyTranslation();
         }
 
-        [Button]
+        // [Button]
         public void ApplyTranslation()
         {
             Type type = translationAsset.GetType();
@@ -67,7 +66,7 @@ namespace _3Dimensions.Localization.Runtime.Scripts
             }
         }
 
-        [Button]
+        // [Button]
         public void SwitchTranslation()
         {
             Type type = translationAsset.GetType();

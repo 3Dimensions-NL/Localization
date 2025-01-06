@@ -1,6 +1,5 @@
 using System;
 using System.Globalization;
-using Sirenix.OdinInspector;
 using UnityEngine;
 namespace _3Dimensions.Localization.Runtime.Scripts
 {
@@ -31,17 +30,14 @@ namespace _3Dimensions.Localization.Runtime.Scripts
                 }
                 return _currentLanguage;
             }
-            private set
-            {
-                _currentLanguage = value;
-            }
+            private set => _currentLanguage = value;
         }
         private static LanguageObject _currentLanguage;
 
-        [SerializeField] private LocalizationSettings settings;
+        public LocalizationSettings settings;
 
         public LanguageObject DefaultLanguage => settings.defaultLanguage;
-        public LanguageObject[] AvailableLanguage => settings.defaultLanguageSet.ToArray();
+        public LanguageObject[] AvailableLanguage => settings.languageSet.ToArray();
 
         public static event Action<LanguageObject> NewLanguageSetEvent;
         
@@ -60,7 +56,7 @@ namespace _3Dimensions.Localization.Runtime.Scripts
             //A preset is found, try and load the preset
             if (!string.IsNullOrEmpty(playerPrefsLanguage))
             {
-                foreach (LanguageObject languageObject in settings.defaultLanguageSet)
+                foreach (LanguageObject languageObject in settings.languageSet)
                 {
                     if (playerPrefsLanguage == languageObject.name)
                     {
@@ -73,7 +69,7 @@ namespace _3Dimensions.Localization.Runtime.Scripts
             //When no preset is set by player, try and load the language associated with the local culture
             string currentCulture = CultureInfo.CurrentCulture.Name;
                 
-            foreach (LanguageObject languageObject in settings.defaultLanguageSet)
+            foreach (LanguageObject languageObject in settings.languageSet)
             {
                 foreach (string culture in languageObject.cultures)
                 {
@@ -89,21 +85,18 @@ namespace _3Dimensions.Localization.Runtime.Scripts
             ApplyDefaultLanguage();
         }
 
-        [Button]
-        private void ApplyDefaultLanguage()
+        public void ApplyDefaultLanguage()
         {
             CurrentLanguage = DefaultLanguage;
             ApplyCurrentLanguage();
         }
         
-        [Button]
-        private void ShowLocalCultureInfo()
+        public void ShowLocalCultureInfo()
         {
             Debug.Log(CultureInfo.CurrentCulture.Name);
         }
 
-        [Button]
-        private void DeleteLanguagePlayerPref()
+        public void DeleteLanguagePlayerPref()
         {
             PlayerPrefs.DeleteKey("Language");
         }

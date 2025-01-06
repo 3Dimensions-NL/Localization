@@ -1,16 +1,15 @@
 ﻿using System;
-using Sirenix.OdinInspector;
 using UnityEngine;
 namespace _3Dimensions.Localization.Runtime.Scripts.Translations
 {
     [CreateAssetMenu(fileName = "New Audio Clip Translation", menuName = "3Dimensions/Localization/New Translation Audio Clip")]
-    [Serializable, InlineEditor]
+    [Serializable]
     public class TranslationAssetAudioClip : TranslationAsset
     {
         public TranslationAudioClip[] translations;
 
         
-        [Serializable, InlineEditor]
+        [Serializable]
         public class TranslationAudioClip: Translation
         {
             public AudioClip clip;
@@ -45,13 +44,15 @@ namespace _3Dimensions.Localization.Runtime.Scripts.Translations
                 if (translations.Length != 0) return;
             }
 
-            LanguageObject[] languages = Resources.Load<LocalizationSettings>("LocalizationSettings").defaultLanguageSet.ToArray();
+            LanguageObject[] languages = Resources.Load<LocalizationSettings>("LocalizationSettings").languageSet.ToArray();
             translations = new TranslationAudioClip[languages.Length];
                 
             for (int i = 0; i < languages.Length; i++)
             {
-                translations[i] = new TranslationAudioClip();
-                translations[i].language = languages[i];
+                translations[i] = new TranslationAudioClip
+                {
+                    language = languages[i]
+                };
             }
             
             UnityEditor.EditorUtility.SetDirty(this);

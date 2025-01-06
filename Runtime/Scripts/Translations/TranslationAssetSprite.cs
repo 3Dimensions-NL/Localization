@@ -1,17 +1,17 @@
 ﻿using System;
-using Sirenix.OdinInspector;
 using UnityEngine;
 namespace _3Dimensions.Localization.Runtime.Scripts.Translations
 {
     [CreateAssetMenu(fileName = "New Sprite Translation", menuName = "3Dimensions/Localization/New Translation Sprite")]
-    [Serializable, InlineEditor]
+    [Serializable]
     public class TranslationAssetSprite : TranslationAsset
     {
         public TranslationSprite[] translations;
         
-        [Serializable, InlineEditor]
+        [Serializable]
         public class TranslationSprite : Translation
         {
+            [SpritePreview(80, 80)]
             public Sprite sprite;
         
             public override T GetValue<T>()
@@ -44,13 +44,15 @@ namespace _3Dimensions.Localization.Runtime.Scripts.Translations
                 if (translations.Length != 0) return;
             }
 
-            LanguageObject[] languages = Resources.Load<LocalizationSettings>("LocalizationSettings").defaultLanguageSet.ToArray();
+            LanguageObject[] languages = Resources.Load<LocalizationSettings>("LocalizationSettings").languageSet.ToArray();
             translations = new TranslationSprite[languages.Length];
                 
             for (int i = 0; i < languages.Length; i++)
             {
-                translations[i] = new TranslationSprite();
-                translations[i].language = languages[i];
+                translations[i] = new TranslationSprite
+                {
+                    language = languages[i]
+                };
             }
             
             UnityEditor.EditorUtility.SetDirty(this);

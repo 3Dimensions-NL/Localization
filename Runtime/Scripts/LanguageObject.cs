@@ -1,5 +1,4 @@
 using System.Globalization;
-using Sirenix.OdinInspector;
 using UnityEngine;
 namespace _3Dimensions.Localization.Runtime.Scripts
 {
@@ -9,9 +8,9 @@ namespace _3Dimensions.Localization.Runtime.Scripts
         public Sprite flag;
         public Texture2D Texture => ConvertSpriteToTexture(flag); 
         public string[] cultures;
-        [SerializeField] public CultureInfo[] Test;
+        public CultureInfo[] Test;
         
-        Texture2D ConvertSpriteToTexture(Sprite sprite)
+        private static Texture2D ConvertSpriteToTexture(Sprite sprite)
         {
             try
             {
@@ -36,7 +35,9 @@ namespace _3Dimensions.Localization.Runtime.Scripts
             }
         }
 
-        [Button]
+        /// <summary>
+        /// Method to test the culture info strings used by the editor script.
+        /// </summary>
         private void TestCultureStrings()
         {
             foreach (string culture in cultures)
