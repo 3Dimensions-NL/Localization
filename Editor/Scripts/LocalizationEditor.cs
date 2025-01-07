@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using _3Dimensions.Localization.Runtime.Scripts;
 using _3Dimensions.Localization.Runtime.Scripts.Translations;
-using Tools.Editor.Scripts.CSV;
 using UnityEditor;
 using UnityEngine;
 namespace _3Dimensions.Localization.Editor.Scripts
@@ -420,175 +419,105 @@ namespace _3Dimensions.Localization.Editor.Scripts
 
         private void ImportCSV()
         {
-            // Import CSV
-            string[][] dataRows = CsvFileReaderAndWriter.GetCsvData(true);
-            Debug.Log("Importing " + dataRows.Length + " CSV rows.");
+            string filePath = EditorUtility.OpenFilePanel("Import CSV", Application.dataPath, "csv");
+            if (string.IsNullOrEmpty(filePath)) return;
 
-            if (dataRows == null || dataRows.Length == 0)
+            try
             {
-                Debug.LogError("No data was found in the imported CSV.");
-                return;
-            }
+                var data = CsvFileReaderWriter.ReadCsv(filePath);
 
-            // Get header row (translations)
-            int itemCount = dataRows[0].Length;
-            LanguageObject[] importedTranslations = new LanguageObject[itemCount - 1];
-
-            // Set used languages (first item in header is "description")
-            for (int item = 1; item < itemCount; item++)
-            {
-                importedTranslations[item - 1] = null; // Default to null to show unrecognized languages
-                foreach (LanguageObject language in Settings.languageSet)
+                if (data.Count == 0)
                 {
-                    if (language.name == dataRows[0][item])
-                    {
-                        importedTranslations[item - 1] = language;
-                        Debug.Log("Used language found: " + language.name);
-                        break; // Found the language, no need to continue checking
-                    }
+                    Debug.LogError("The CSV file is empty. Nothing to import.");
+                    return;
                 }
 
-                if (importedTranslations[item - 1] == null)
+                // Example: Assuming headers and rows as processed in your previous ImportCSV
+                List<LanguageObject> importedLanguages = new List<LanguageObject>();
+                int headerCount = data[0].Count;
+
+                for (int i = 1; i < data.Count; i++) // Skip the first row (header)
                 {
-                    Debug.LogWarning($"Language {dataRows[0][item]} from CSV header not found in settings.");
-                }
-            }
+                    List<string> row = data[i];
+                    // Perform your logic to handle each row of translations
+                    string translationName = row[0]; // Translation identifier
+                    CreateTranslationScriptableObject(translationName, TranslationType.String);
 
-            // Process rows (skip header row)
-            for (int row = 1; row < dataRows.Length; row++)
-            {
-                // Ensure the row has enough items
-                if (dataRows[row].Length < itemCount)
-                {
-                    Debug.LogError($"Row {row} has fewer columns than expected. Skipping this row.");
-                    continue;
-                }
-
-                string fileName = dataRows[row][0];
-                if (string.IsNullOrEmpty(fileName))
-                {
-                    Debug.LogError($"Row {row} has an empty filename. Skipping this row.");
-                    continue;
-                }
-
-                // Find or create the translation scriptable object
-                CreateTranslationScriptableObject(fileName, TranslationType.String);
-
-                // Find the created translation asset
-                TranslationAsset translationAsset = _translationsList.Find(x => x.name == fileName);
-                if (translationAsset == null)
-                {
-                    Debug.LogError($"Could not find or create TranslationAsset: {fileName}. Skipping this row.");
-                    continue; // Move to the next row instead of breaking the entire process
-                }
-
-                // Work specifically with TranslationAssetString
-                if (translationAsset.GetType() == typeof(TranslationAssetString))
-                {
-                    TranslationAssetString translationAssetString = translationAsset as TranslationAssetString;
-
-                    // Create translations array if not already set or mismatched
-                    if (translationAssetString.translations == null ||
-                        translationAssetString.translations.Length != importedTranslations.Length)
+                    TranslationAsset translation = _translationsList.Find(x => x.name == translationName);
+                    if (translation is TranslationAssetString translationAssetString)
                     {
                         translationAssetString.translations =
-                            new TranslationAssetString.TranslationString[importedTranslations.Length];
-                        for (int i = 0; i < importedTranslations.Length; i++)
+                            new TranslationAssetString.TranslationString[headerCount - 1];
+
+                        for (int columnIndex = 1; columnIndex < headerCount; columnIndex++)
                         {
-                            translationAssetString.translations[i] = new TranslationAssetString.TranslationString
-                            {
-                                language = importedTranslations[i]
-                            };
+                            if (columnIndex - 1 >= Settings.languageSet.Count) continue;
+
+                            TranslationAssetString.TranslationString translationString =
+                                new TranslationAssetString.TranslationString
+                                {
+                                    language = Settings.languageSet[columnIndex - 1],
+                                    text = row[columnIndex]
+                                };
+
+                            translationAssetString.translations[columnIndex - 1] = translationString;
                         }
+
+                        EditorUtility.SetDirty(translationAssetString);
                     }
-
-                    // Write translations to the asset
-                    Debug.Log($"Writing translations to {translationAsset.name}");
-                    for (int item = 1; item < itemCount; item++)
-                    {
-                        if (importedTranslations[item - 1] == null)
-                        {
-                            Debug.LogWarning($"Skipping unsupported language at column {item} for row {row}.");
-                            continue;
-                        }
-
-                        // Ensure translations array has a valid slot
-                        if (translationAssetString.translations[item - 1] == null)
-                        {
-                            translationAssetString.translations[item - 1] = new TranslationAssetString.TranslationString
-                            {
-                                language = importedTranslations[item - 1]
-                            };
-                        }
-
-                        // Assign the translation value
-                        string value = dataRows[row][item];
-                        translationAssetString.translations[item - 1].text = value;
-                    }
-
-                    // Mark this asset as dirty to ensure changes are saved
-                    EditorUtility.SetDirty(translationAsset);
                 }
+
+                AssetDatabase.Refresh();
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"Failed to import CSV: {ex.Message}");
             }
         }
 
         private void ExportCSV()
         {
-            // Collect and store data as strings;
-            // First row with headers
-            string firstRow = "Translation Name";
-            List<string> csvRows = new List<string>();
-            List<string> languageList = new List<string>();
+            string filePath = EditorUtility.SaveFilePanel("Export CSV", Application.dataPath, "translations", "csv");
+            if (string.IsNullOrEmpty(filePath)) return;
 
-            // Add languages to header as columns
-            foreach (LanguageObject language in Settings.languageSet)
+            try
             {
-                // Store used Languages
-                languageList.Add(language.name);
+                var csvData = new List<List<string>>();
 
-                // Create header column
-                firstRow += "," + language.name;
-            }
-
-            // Add first row to CSV data rows
-            csvRows.Add(firstRow);
-
-            // Iterate over all translation objects
-            foreach (TranslationAsset translationObject in _translationsList)
-            {
-                if (translationObject.GetType() == typeof(TranslationAssetString))
+                // Write headers
+                List<string> headers = new List<string> { "Translation Name" };
+                foreach (var lang in Settings.languageSet)
                 {
-                    TranslationAssetString translationAssetString = translationObject as TranslationAssetString;
+                    headers.Add(lang.name);
+                }
 
-                    // Start building the translation row with the translation name
-                    string translationRow = translationObject.name;
+                csvData.Add(headers);
 
-                    // Add translations for each language
-                    foreach (string language in languageList)
+                // Write translation rows
+                foreach (var translationAsset in _translationsList)
+                {
+                    if (translationAsset is TranslationAssetString translationAssetString)
                     {
-                        // Find and add the appropriate translation for the language
-                        string value = "";
-                        foreach (TranslationAssetString.TranslationString translation in translationAssetString
-                                     .translations)
+                        List<string> row = new List<string> { translationAssetString.name };
+                        foreach (var lang in Settings.languageSet)
                         {
-                            if (translation.language.name == language)
-                            {
-                                value = translation.GetValue<string>();
-                                break;
-                            }
+                            var translation =
+                                translationAssetString.translations.FirstOrDefault(t => t.language == lang);
+                            string value = translation?.text ?? ""; // Default to empty string if no translation found
+                            row.Add(value);
                         }
 
-                        // Append the value to the row (ensure empty values are properly formatted)
-                        translationRow += $",\"{value}\""; // Add quotes to handle special characters
+                        csvData.Add(row);
                     }
-
-                    // Add the completed row to the CSV
-                    csvRows.Add(translationRow);
                 }
-            }
 
-            // Write the rows to the CSV file
-            CsvFileReaderAndWriter.WriteCsv(csvRows.ToArray());
+                CsvFileReaderWriter.WriteCsv(csvData, filePath);
+                Debug.Log("CSV export completed!");
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"Failed to export CSV: {ex.Message}");
+            }
         }
 
         public static void LoadTranslations()
