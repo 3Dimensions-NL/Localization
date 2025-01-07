@@ -1,18 +1,37 @@
 # 3Dimensions Localization
-A collection of components and scripts to help localize your Unity project.
+A Unity plugin to streamline localization in your projects with a focus on simplicity, flexibility, and compatibility. Create and manage translations for UI text, sprites, and audio effortlessly.
+
+## Prerequisites
+- Unity 2022.3.x LTS or higher.
+- Installed TextMesh Pro package (via Package Manager).
+
+## Installation
+1. Open Unity and navigate to `Window -> Package Manager`.
+2. Click the **+ Add** button in the top-left corner and select **"Add package from Git URL"**.
+3. Paste the Git repository URL and click **Add**.
+4. Import Samples to get demo assets and a manager script (this can be done from the Package Manager window under "Samples").
 
 ## Usage
-1. Install the package with the Unity Package Manager. (Use the 'Install package from GIT URL' function and paste the repo URL).
-2. Import the Samples (these contain a manager script and example translation assets).
-3. Open the Localization Editor Window via the menu (3Dimensions -> Localization -> Localization Editor) and select a folder where you want your translations assets to be saved.
-4. Change the Localization Settings if to your liking, add new languages or change the default language.
-5. Under Translation Creation, enter a Translation name and hit one of the New Translation Type buttons (for now it's just string, sprite and audio). 
-6. You can also import a translation csv file. (Remember to use the correct language names in the header! You can also create some string translations and export a csv to see the structure)
-7. When you have created some translations you can add the LocalizationManager prefab to your start scene. This wil manage all TranslationComponents and will not destroy on load.
-8. Add a TranslationComponent to an translatable object (e.g. TextMesh Pro Text object, sprite or audio source) and add one of your translation assets and click the **Apply Translation** or **Switch Translation** buttons to test it out.
-9. If you want to change the language in runtime you can use the LanguageSelectButton from the samples or create a dropdown that sets the language via the LocalizationManager.
+1. Open the **Localization Editor Window** `3Dimensions -> Localization -> Localization Editor`.
+2. Select a translation folder where you want your assets to be saved.
+3. Configure settings in the **Localization Settings**:
+    - Add or remove supported languages.
+    - Set a default language.
+4. Create translations in the **Translation Creation** section:
+    - Enter a Translation name.
+    - Click one of the New Translation Type buttons (String, Sprite, or Audio).
+5. Import translations from a CSV file (ensure language headers match exactly).
+6. Add the `LocalizationManager` prefab to your start scene. This will persist through scenes and manage Runtime translations.
+7. Attach a `TranslationComponent` to any localizable object (e.g., `TextMesh Pro`, Sprite, or AudioSource). Assign a translation asset and test it with **Apply Translation**.
+8. Change the language during runtime using the `LanguageSelectButton` prefab or:
+   ```csharp
+   LocalizationManager.SetLanguage("German");
+   ```
 
 ## Notes
-1. There is a demo scene **'LocalizationSampleScene'** in the samples folder to showcase a simple setup. 
-2. For sprite and audio translation assets you have to save the actual files somewhere in your project and link them to the Translation Asset. See the Sprite_Flag_Translation.asset as an example.
+1. A demo scene **LocalizationSampleScene** is included in the samples folder.
+2. Sprite and audio translations require you to link existing files in your project.
 
+## Tips & Common Issues
+- Ensure all translation assets have unique names.
+- Import/export translations in CSV format to manage them efficiently.
