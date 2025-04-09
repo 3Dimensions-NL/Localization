@@ -7,7 +7,7 @@ namespace _3Dimensions.Localization.Runtime.Scripts
 {
     public class TranslationComponent : MonoBehaviour
     {
-        [SerializeField] private TranslationAsset translationAsset;
+        public TranslationAsset translationAsset;
         private void Start()
         {
             ApplyTranslation();
