@@ -7,6 +7,7 @@ namespace _3Dimensions.Localization.Runtime.Scripts
 {
     public class TranslationComponent : MonoBehaviour
     {
+        [TranslationReference]
         public TranslationAsset translationAsset;
         private void Start()
         {
