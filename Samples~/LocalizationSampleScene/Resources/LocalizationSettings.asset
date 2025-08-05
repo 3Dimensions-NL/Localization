@@ -13,8 +13,9 @@ MonoBehaviour:
   m_Name: LocalizationSettings
   m_EditorClassIdentifier: 
   pathToStoreLanguages: C:/UnityProjects/UnityTools/Assets/Localization/Samples/LocalizationSampleScene/Localizations
-  pathToStoreTranslations: C:/UnityProjects/UnityTools/Assets/Localization/Samples/LocalizationSampleScene/Translations
+  pathToStoreTranslations: C:/UnityProjects/UnityTools/Assets/TEST/Localization/Test
+    Translations
   defaultLanguage: {fileID: 11400000, guid: b8666613837603341b8bb395fd1645c7, type: 2}
   languageSet:
-  - {fileID: 11400000, guid: b3648eb5d99eac649918b84e628243b5, type: 2}
   - {fileID: 11400000, guid: b8666613837603341b8bb395fd1645c7, type: 2}
+  - {fileID: 11400000, guid: b3648eb5d99eac649918b84e628243b5, type: 2}

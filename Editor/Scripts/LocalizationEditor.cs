@@ -297,11 +297,11 @@ namespace _3Dimensions.Localization.Editor.Scripts
             EditorGUILayout.BeginHorizontal("box");
             if (GUILayout.Button("Import CSV"))
             {
-                ImportCSV();
+                ImportCsv();
             }
             if (GUILayout.Button("Export CSV"))
             {
-                ExportCSV();
+                ExportCsv();
             }
             EditorGUILayout.EndHorizontal();
         }
@@ -417,7 +417,7 @@ namespace _3Dimensions.Localization.Editor.Scripts
             EditorGUILayout.EndScrollView();
         }
 
-        private void ImportCSV()
+        private void ImportCsv()
         {
             string filePath = EditorUtility.OpenFilePanel("Import CSV", Application.dataPath, "csv");
             if (string.IsNullOrEmpty(filePath)) return;
@@ -432,18 +432,38 @@ namespace _3Dimensions.Localization.Editor.Scripts
                     return;
                 }
 
-                // Example: Assuming headers and rows as processed in your previous ImportCSV
-                List<LanguageObject> importedLanguages = new List<LanguageObject>();
+                // Show a confirmation dialog with the number of translations to import
+                int translationsToImport = data.Count;
+                bool proceed = EditorUtility.DisplayDialog(
+                    "Import Translations",
+                    $"About to import {translationsToImport} translations.\nDo you want to proceed?",
+                    "Import",
+                    "Cancel"
+                );
+                if (!proceed)
+                {
+                    Debug.Log("Import cancelled by user.");
+                    return;
+                }
+
                 int headerCount = data[0].Count;
 
-                for (int i = 1; i < data.Count; i++) // Skip the first row (header)
+                for (int i = 0; i < data.Count; i++)
                 {
                     List<string> row = data[i];
-                    // Perform your logic to handle each row of translations
                     string translationName = row[0]; // Translation identifier
                     CreateTranslationScriptableObject(translationName, TranslationType.String);
 
+                    AssetDatabase.Refresh();
+
                     TranslationAsset translation = _translationsList.Find(x => x.name == translationName);
+
+                    if (!translation)
+                    {
+                        Debug.LogWarning($"Failed to find translation: {translationName}");
+                        continue;
+                    }
+
                     if (translation is TranslationAssetString translationAssetString)
                     {
                         translationAssetString.translations =
@@ -475,7 +495,7 @@ namespace _3Dimensions.Localization.Editor.Scripts
             }
         }
 
-        private void ExportCSV()
+        private void ExportCsv()
         {
             string filePath = EditorUtility.SaveFilePanel("Export CSV", Application.dataPath, "translations", "csv");
             if (string.IsNullOrEmpty(filePath)) return;
@@ -598,6 +618,7 @@ namespace _3Dimensions.Localization.Editor.Scripts
 
             if (System.IO.File.Exists(fullPath))
             {
+                Debug.Log("Translation " + fileName + " already exists, overwriting when needed.");
                 //Do nothing when exists!
                 return;
             }
@@ -645,7 +666,7 @@ namespace _3Dimensions.Localization.Editor.Scripts
             }
             
             AssetDatabase.Refresh();
-            AssetDatabase.ImportAsset(relativePath + "/" + fileName);
+            AssetDatabase.ImportAsset(relativePath + "/" + fileName + ".asset");
             LoadTranslations();
         }
         
